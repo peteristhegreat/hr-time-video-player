@@ -49,6 +49,7 @@
 #include <QVideoProbe>
 #include <QMediaMetaData>
 #include <QtWidgets>
+#include <QSettings>
 
 Player::Player(QWidget *parent)
     : QWidget(parent)
@@ -194,7 +195,17 @@ Player::~Player()
 
 void Player::open()
 {
-    QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Open Files"));
+    QSettings s;
+    QString foldername = s.value("last_folder",QDir::currentPath()).toString();
+
+    QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Open Files"), foldername);
+
+    if(fileNames.size() > 0)
+    {
+        QFileInfo info(fileNames.first());
+        s.setValue("last_folder", info.absolutePath());
+    }
+
     addToPlaylist(fileNames);
 }
 
@@ -228,7 +239,7 @@ void Player::positionChanged(qint64 progress)
     if (!slider->isSliderDown()) {
         slider->setValue(progress / 1000);
     }
-    updateDurationInfo(progress / 1000);
+    updateDurationInfo(progress / 1000.);
 }
 
 void Player::metaDataChanged()
@@ -366,16 +377,22 @@ void Player::displayErrorMessage()
     setStatusInfo(player->errorString());
 }
 
-void Player::updateDurationInfo(qint64 currentInfo)
+void Player::updateDurationInfo(double currentInfoD)
 {
+    qint64 currentInfo = (qint64)currentInfoD;
     QString tStr;
     if (currentInfo || duration) {
-        QTime currentTime((currentInfo/3600)%60, (currentInfo/60)%60, currentInfo%60, (currentInfo*1000)%1000);
+        QTime currentTime((currentInfo/3600)%60, // hr
+                          (currentInfo/60)%60, // min
+                          currentInfo%60, // sec
+                          ((qint64)(currentInfoD*1000))%1000 // ms
+                          );
         QTime totalTime((duration/3600)%60, (duration/60)%60, duration%60, (duration*1000)%1000);
-        QString format = "mm:ss";
+        QString format = "mm:ss.zzz";
+        QString format2 = "mm:ss";
         if (duration > 3600)
             format = "hh:mm:ss";
-        tStr = currentTime.toString(format) + " / " + totalTime.toString(format);
+        tStr = currentTime.toString(format) + " / " + totalTime.toString(format2);
     }
     labelDuration->setText(tStr);
 }

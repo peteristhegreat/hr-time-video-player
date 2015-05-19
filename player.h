@@ -99,7 +99,7 @@ private:
     void setTrackInfo(const QString &info);
     void setStatusInfo(const QString &info);
     void handleCursor(QMediaPlayer::MediaStatus status);
-    void updateDurationInfo(qint64 currentInfo);
+    void updateDurationInfo(double currentInfo);
 
     QMediaPlayer *player;
     QMediaPlaylist *playlist;

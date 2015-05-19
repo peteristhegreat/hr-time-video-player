@@ -39,16 +39,20 @@
 ****************************************************************************/
 
 #include "player.h"
+#include "version.h"
 
 #include <QApplication>
+#include <QSettings>
 
 int main(int argc, char *argv[])
 {
-#ifdef Q_WS_MAEMO_6
-    //Meego graphics system conflicts with xvideo during fullscreen transition
-    QApplication::setGraphicsSystem("raster");
-#endif
     QApplication app(argc, argv);
+
+    app.setApplicationName(VER_PRODUCTNAME_STR);
+    app.setOrganizationName(VER_COMPANYNAME_STR);
+    app.setOrganizationDomain(VER_COMPANYDOMAIN_STR);
+    app.setApplicationDisplayName(VER_PRODUCTNAME_STR);// not used?
+    QSettings::setDefaultFormat(QSettings::IniFormat);
 
     Player player;
 
