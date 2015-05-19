@@ -51,6 +51,8 @@
 #include <QtWidgets>
 #include <QSettings>
 
+#define SLIDER_DIVISOR 10
+
 Player::Player(QWidget *parent)
     : QWidget(parent)
     , videoWidget(0)
@@ -92,7 +94,7 @@ Player::Player(QWidget *parent)
     connect(playlistView, SIGNAL(activated(QModelIndex)), this, SLOT(jump(QModelIndex)));
 
     slider = new QSlider(Qt::Horizontal, this);
-    slider->setRange(0, player->duration() / 1000);
+    slider->setRange(0, player->duration() / SLIDER_DIVISOR);
 
     labelDuration = new QLabel(this);
     connect(slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
@@ -231,13 +233,13 @@ void Player::addToPlaylist(const QStringList& fileNames)
 void Player::durationChanged(qint64 duration)
 {
     this->duration = duration/1000;
-    slider->setMaximum(duration / 1000);
+    slider->setMaximum(duration / SLIDER_DIVISOR);
 }
 
 void Player::positionChanged(qint64 progress)
 {
     if (!slider->isSliderDown()) {
-        slider->setValue(progress / 1000);
+        slider->setValue(progress / SLIDER_DIVISOR);
     }
     updateDurationInfo(progress / 1000.);
 }
@@ -282,9 +284,10 @@ void Player::playlistPositionChanged(int currentItem)
     playlistView->setCurrentIndex(playlistModel->index(currentItem, 0));
 }
 
-void Player::seek(int seconds)
+void Player::seek(int ticks)
 {
-    player->setPosition(seconds * 1000);
+//    qreal seconds = ((qreal)ticks) * (qreal)SLIDER_DIVISOR;
+    player->setPosition(ticks * SLIDER_DIVISOR);
 }
 
 void Player::statusChanged(QMediaPlayer::MediaStatus status)

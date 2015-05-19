@@ -26,10 +26,11 @@ maemo* {
 }
 
 target.path = $$[QT_INSTALL_EXAMPLES]/multimediawidgets/player
-INSTALLS += target
 
+INSTALLS += target
 
 RC_FILE = myapp.rc
 
 DISTFILES += \
     myapp.rc
+

@@ -23,7 +23,7 @@
 #define VER_FILEDESCRIPTION_STR     "HR Time Video Player"
 // This needs to stay "Captain Crunch" or it will change the location of the INI File
 #define VER_INTERNALNAME_STR        "HR Time Video Player"
-#define VER_LEGALCOPYRIGHT_STR      "Copyright © 2015 EyeTechDS"
+#define VER_LEGALCOPYRIGHT_STR      "Copyright © 2015 Post Meridian"
 #define VER_LEGALTRADEMARKS1_STR    "All Rights Reserved"
 #define VER_LEGALTRADEMARKS2_STR    VER_LEGALTRADEMARKS1_STR
 #define VER_ORIGINALFILENAME_STR    "player.exe"
